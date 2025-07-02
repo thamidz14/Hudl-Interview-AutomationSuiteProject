@@ -24,6 +24,3 @@ class LoginPage:
     def click_continue_password(self):
         self.driver.find_element(*self.continue_password_button).click()
     
-    
-        
-    
