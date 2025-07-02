@@ -1,0 +1,2 @@
+selenium==4.34.0    # Latest version as of 2025-07-02
+pytest==8.4.1       # Latest version as of 2025-07-02
