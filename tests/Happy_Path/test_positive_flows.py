@@ -36,13 +36,20 @@ def generate_strong_password(length=12):
     return ''.join(password)
 
 # 1. Valid Login Flow
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 def test_valid_login_flow(browser):
     browser.get(LOGIN_URL) 
     login_page = LoginPage(browser)
     login_page.enter_username("thamidzaman96@gmail.com")
     login_page.click_continue_username()
     password_page = PasswordPage(browser)
-    password_page.enter_password("mambun-hijraV-kawfy0")
+    # Load password securely from environment variable
+    password = os.environ.get("HUDL_TEST_PASSWORD")
+    password_page.enter_password(password)
     password_page.click_continue_password()
     time.sleep(5)
     # Assert login success (dashboard loaded)
