@@ -19,3 +19,6 @@ class ResetPasswordPage:
         backBtn = self.driver.find_element(*self.go_back_button)
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", backBtn)
         backBtn.click()
+
+    def clear_email_field(self):
+        self.driver.find_element(*self.email_field).clear()
