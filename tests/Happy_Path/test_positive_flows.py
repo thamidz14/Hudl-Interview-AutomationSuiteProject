@@ -9,6 +9,7 @@ from pages.create_account_page import CreateAccountPage
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support import expected_conditions as EC 
 from selenium.webdriver.common.by import By 
+from utils.testdata import random_email, random_first_name, random_last_name, random_password
 from dotenv import load_dotenv
 import os
 
@@ -17,25 +18,6 @@ PASSWORD_URL = "https://identity.hudl.com/u/login/password?state=hKFo2SAyNEk1dTU
 
 RESET_PASSWORD_URL = "https://identity.hudl.com/u/reset-password/request/prod-hudl-users-terraform?state=hKFo2SAwVWdRZVlNY2NKSVZ5SGNwbU83Ym9zZGItUU1DNXVFaqFurnJlc2V0LXBhc3N3b3Jko3RpZNkgLTh2TngzckThZVpkdmJkOGNGQWRlM3hIX3Frd0c5aWKjY2lk2SBuMTNSZmtIektvemFOeFdDNWRaUW9iZVdHZjRXalNuNQ"  # Adjust if needed
 CREATE_ACCOUNT_URL = "https://www.hudl.com/register"  # Adjust if needed
-
-def generate_strong_password(length=12):
-    # Character sets
-    lowers = string.ascii_lowercase
-    uppers = string.ascii_uppercase
-    digits = string.digits
-    specials = '!@#$%^&*'
-    
-    # Pick at least 3 sets
-    sets = [lowers, uppers, digits, specials]
-    chosen_sets = random.sample(sets, 3)
-    
-    # Ensure at least one character from each chosen set
-    password = [random.choice(s) for s in chosen_sets]
-    # Fill the rest with random choices from all selected sets
-    all_chosen = ''.join(chosen_sets)
-    password += random.choices(all_chosen, k=max(length - len(password), 0))
-    random.shuffle(password)
-    return ''.join(password)
 
 load_dotenv()
 
@@ -59,7 +41,7 @@ def test_valid_login_flow(browser):
 def test_reset_password_flow(browser):
     browser.get(LOGIN_URL) 
     login_page = LoginPage(browser)
-    login_page.enter_username("testuser@gmail.com")
+    login_page.enter_username(random_email())
     login_page.click_continue_username()
     password_page = PasswordPage(browser)
     password_page.click_forgot_password_button()
@@ -72,7 +54,7 @@ def test_reset_password_flow(browser):
 def test_go_back_from_reset_password(browser):
     browser.get(LOGIN_URL) 
     login_page = LoginPage(browser)
-    login_page.enter_username("testuser@gmail.com")
+    login_page.enter_username(random_email())
     login_page.click_continue_username()
     password_page = PasswordPage(browser)
     password_page.click_forgot_password_button()
@@ -96,21 +78,15 @@ def test_create_account_from_login(browser):
     login_page = LoginPage(browser)
     login_page.click_create_account_button()
     create_account_page = CreateAccountPage(browser)
-    create_account_page.enter_first_name(
-        ''.join(random.choices(string.ascii_uppercase, k=1)) +
-        ''.join(random.choices(string.ascii_lowercase, k=random.randint(3, 7)))
-    )
-    create_account_page.enter_last_name(
-        ''.join(random.choices(string.ascii_uppercase, k=1)) +
-        ''.join(random.choices(string.ascii_lowercase, k=random.randint(4, 8)))
-    )
-    create_account_page.enter_email(
-        ''.join(random.choices(string.ascii_lowercase + string.digits, k=8)) +
-        '@' + random.choice(["gmail.com", "yahoo.com", "outlook.com", "testmail.com"])
-    )
+    first_name = random_first_name()
+    last_name = random_last_name()
+    email = random_email()
+    password = random_password(12)
+    create_account_page.enter_first_name(first_name)
+    create_account_page.enter_last_name(last_name)
+    create_account_page.enter_email(email)
     create_account_page.click_create_account()
     time.sleep(2)
-    password = generate_strong_password(12)
     create_account_page.enter_password(password)
     create_account_page.click_continue_account()
     time.sleep(2)
@@ -128,32 +104,35 @@ def test_access_create_account_page_from_password_page(browser):
     password_page.click_create_account_button()
     time.sleep(2)
     assert "signup" in browser.current_url or "Create Account" in browser.page_source
+'''
 
 # 7. Access Create Account Page and Create an Account from Password Page
-def test_access_create_account_page_and_create_account_from_password_page(browser):
+import pytest
+
+@pytest.mark.parametrize(
+    "first_name,last_name,email,password",
+    [
+        (random_first_name(), random_last_name(), random_email(), random_password(12)),
+        (random_first_name(), random_last_name(), random_email(), random_password(12)),
+        (random_first_name(), random_last_name(), random_email(), random_password(12)),
+    ]
+)
+def test_access_create_account_page_and_create_account_from_password_page(browser, first_name, last_name, email, password):
     browser.get(LOGIN_URL)
     login_page = LoginPage(browser)
-    login_page.enter_username("validuser@example.com")
+    login_page.enter_username(email)
     login_page.click_continue_username()
     password_page = PasswordPage(browser)
     time.sleep(2)
     password_page.click_create_account_button()
     time.sleep(2)
     create_account_page = CreateAccountPage(browser)
-    create_account_page.enter_first_name(
-        ''.join(random.choices(string.ascii_uppercase, k=1)) +
-        ''.join(random.choices(string.ascii_lowercase, k=random.randint(3, 7)))
-    )
-    create_account_page.enter_last_name(
-        ''.join(random.choices(string.ascii_uppercase, k=1)) +
-        ''.join(random.choices(string.ascii_lowercase, k=random.randint(4, 8)))
-    )
+    create_account_page.enter_first_name(first_name)
+    create_account_page.enter_last_name(last_name)
     create_account_page.click_create_account()
     time.sleep(2)
-    password = generate_strong_password(12)
     create_account_page.enter_password(password)
     create_account_page.click_continue_account()
     time.sleep(4)
     # Assert navigation to create account page
     assert "fan" in browser.current_url or "Find livestreams" in browser.page_source
-'''
