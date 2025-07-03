@@ -12,10 +12,14 @@ class PasswordPage:
         self.driver.find_element(*self.password_field).send_keys(password)
 
     def click_create_account_button(self):
-        self.driver.find_element(*self.create_account_button).click()
+        createAcctBtn = self.driver.find_element(*self.create_account_button)
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", createAcctBtn)
+        createAcctBtn.click()
 
     def click_forgot_password_button(self):
         self.driver.find_element(*self.forgot_password_button).click()
 
     def click_continue_password(self):
-        self.driver.find_element(*self.continue_password_button).click()
+        btn = self.driver.find_element(*self.continue_password_button)
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", btn)
+        btn.click()
