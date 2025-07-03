@@ -1,8 +1,8 @@
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import allure
 
-'''
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     # Attach screenshot to Allure on failure
@@ -15,7 +15,6 @@ def pytest_runtest_makereport(item, call):
                 allure.attach(driver.get_screenshot_as_png(), name="screenshot", attachment_type=allure.attachment_type.PNG)
             except Exception as e:
                 pass
-'''
 
 @pytest.fixture
 def browser():
