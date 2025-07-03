@@ -9,6 +9,8 @@ from pages.create_account_page import CreateAccountPage
 from selenium.webdriver.support.ui import WebDriverWait 
 from selenium.webdriver.support import expected_conditions as EC 
 from selenium.webdriver.common.by import By 
+from dotenv import load_dotenv
+import os
 
 LOGIN_URL = "https://identity.hudl.com/u/login/identifier?state=hKFo2SAyNEk1dTU0UkkwclVFcDJVVFI3N2hJUmlVcHFiMTBfVKFur3VuaXZlcnNhbC1sb2dpbqN0aWTZIENjRXpENWJHUWVBekg0TjRjUFRQWUV3WG9nSERBTnE3o2NpZNkgbjEzUmZrSHpLb3phTnhXQzVkWlFvYmVXR2Y0V2pTbjU"
 PASSWORD_URL = "https://identity.hudl.com/u/login/password?state=hKFo2SAyNEk1dTU0UkkwclVFcDJVVFI3N2hJUmlVcHFiMTBfVKFur3VuaXZlcnNhbC1sb2dpbqN0aWTZIENjRXpENWJHUWVBekg0TjRjUFRQWUV3WG9nSERBTnE3o2NpZNkgbjEzUmZrSHpLb3phTnhXQzVkWlFvYmVXR2Y0V2pTbjU"
@@ -36,10 +38,6 @@ def generate_strong_password(length=12):
     return ''.join(password)
 
 # 1. Valid Login Flow
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
 
 def test_valid_login_flow(browser):
     browser.get(LOGIN_URL) 
@@ -48,6 +46,7 @@ def test_valid_login_flow(browser):
     login_page.click_continue_username()
     password_page = PasswordPage(browser)
     # Load password securely from environment variable
+    load_dotenv()
     password = os.environ.get("HUDL_TEST_PASSWORD")
     password_page.enter_password(password)
     password_page.click_continue_password()
