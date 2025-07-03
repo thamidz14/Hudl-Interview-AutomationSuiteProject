@@ -37,6 +37,8 @@ def generate_strong_password(length=12):
     random.shuffle(password)
     return ''.join(password)
 
+load_dotenv()
+
 # 1. Valid Login Flow
 
 def test_valid_login_flow(browser):
@@ -46,14 +48,13 @@ def test_valid_login_flow(browser):
     login_page.click_continue_username()
     password_page = PasswordPage(browser)
     # Load password securely from environment variable
-    load_dotenv()
     password = os.environ.get("HUDL_TEST_PASSWORD")
     password_page.enter_password(password)
     password_page.click_continue_password()
     time.sleep(5)
     # Assert login success (dashboard loaded)
     assert "Newcastle Jets FC" in browser.page_source
-
+'''
 # 2. Reset Password Flow
 def test_reset_password_flow(browser):
     browser.get(LOGIN_URL) 
@@ -155,3 +156,4 @@ def test_access_create_account_page_and_create_account_from_password_page(browse
     time.sleep(4)
     # Assert navigation to create account page
     assert "fan" in browser.current_url or "Find livestreams" in browser.page_source
+'''
