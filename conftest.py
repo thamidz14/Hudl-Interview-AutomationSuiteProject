@@ -19,7 +19,7 @@ def pytest_runtest_makereport(item, call):
 @pytest.fixture
 def browser():
     options = Options()
-    #options.add_argument("--headless=False")  # Run in headless mode
+    options.add_argument("--headless=False")  # Run in headless mode
     driver = webdriver.Chrome(options=options)
     driver.implicitly_wait(10)  # Wait up to 10 seconds for elements
     driver.maximize_window()
