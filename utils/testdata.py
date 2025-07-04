@@ -5,12 +5,6 @@ def random_email(domain="testmail.com"):
     user = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
     return f"{user}@{domain}"
 
-def random_first_name():
-    return ''.join(random.choices(string.ascii_uppercase, k=1)) + ''.join(random.choices(string.ascii_lowercase, k=random.randint(3,7)))
-
-def random_last_name():
-    return ''.join(random.choices(string.ascii_uppercase, k=1)) + ''.join(random.choices(string.ascii_lowercase, k=random.randint(4,8)))
-
 def random_password(length=12):
     lowers = string.ascii_lowercase
     uppers = string.ascii_uppercase

@@ -1,0 +1,13 @@
+[
+    ".",
+    "invalid@",
+    "user@",
+    "@domain.com",
+    "noatsymbol.com",
+    "",
+    "user@domain",
+    "user@domain,com",
+    "   ",
+    "   @.com",
+    "   a$%6@.com"
+]
